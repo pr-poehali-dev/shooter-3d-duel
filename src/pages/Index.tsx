@@ -3,11 +3,12 @@ import MainMenu from "@/components/game/MainMenu";
 import BattleScene from "@/components/game/BattleScene";
 import Inventory from "@/components/game/Inventory";
 import Settings from "@/components/game/Settings";
+import Intro from "@/components/game/Intro";
 
-type Screen = "menu" | "battle" | "inventory" | "settings";
+type Screen = "intro" | "menu" | "battle" | "inventory" | "settings";
 
 const Index = () => {
-  const [screen, setScreen] = useState<Screen>("menu");
+  const [screen, setScreen] = useState<Screen>("intro");
   const [battleMap, setBattleMap] = useState("urban");
   const [battleMode, setBattleMode] = useState("tdm");
   const [prevScreen, setPrevScreen] = useState<Screen>("menu");
@@ -22,6 +23,10 @@ const Index = () => {
     setBattleMode(mode);
     setScreen("battle");
   };
+
+  if (screen === "intro") {
+    return <Intro onDone={() => setScreen("menu")} />;
+  }
 
   if (screen === "battle") {
     return (
