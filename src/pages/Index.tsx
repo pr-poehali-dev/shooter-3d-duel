@@ -11,40 +11,35 @@ const Index = () => {
   const [screen, setScreen] = useState<Screen>("intro");
   const [battleMap, setBattleMap] = useState("urban");
   const [battleMode, setBattleMode] = useState("tdm");
+  const [battleBotCount, setBattleBotCount] = useState(5);
+  const [battleBotDiff, setBattleBotDiff] = useState("normal");
   const [prevScreen, setPrevScreen] = useState<Screen>("menu");
 
-  const goTo = (s: Screen) => {
-    setPrevScreen(screen);
-    setScreen(s);
-  };
+  const goTo = (s: Screen) => { setPrevScreen(screen); setScreen(s); };
 
-  const handlePlay = (map: string, mode: string) => {
+  const handlePlay = (map: string, mode: string, botCount: number, botDifficulty: string) => {
     setBattleMap(map);
     setBattleMode(mode);
+    setBattleBotCount(botCount);
+    setBattleBotDiff(botDifficulty);
     setScreen("battle");
   };
 
-  if (screen === "intro") {
-    return <Intro onDone={() => setScreen("menu")} />;
-  }
+  if (screen === "intro")     return <Intro onDone={() => setScreen("menu")} />;
+  if (screen === "inventory") return <Inventory onBack={() => setScreen("menu")} />;
+  if (screen === "settings")  return <Settings onBack={() => setScreen("menu")} />;
 
   if (screen === "battle") {
     return (
       <BattleScene
         mapId={battleMap}
         mode={battleMode}
+        botCount={battleBotCount}
+        botDifficulty={battleBotDiff}
         onExit={() => setScreen("menu")}
         onInventory={() => goTo("inventory")}
       />
     );
-  }
-
-  if (screen === "inventory") {
-    return <Inventory onBack={() => setScreen(prevScreen === "battle" ? "menu" : "menu")} />;
-  }
-
-  if (screen === "settings") {
-    return <Settings onBack={() => setScreen("menu")} />;
   }
 
   return (

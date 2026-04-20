@@ -52,8 +52,15 @@ const MODES = [
   { id: "escort", name: "ЭСКОРТ", icon: "Shield", desc: "Сопроводи цель через карту" },
 ];
 
+const BOT_DIFFICULTIES = [
+  { id: "easy", label: "НОВИЧОК", color: "#39d353", accuracy: 0.2, reactionMs: 2000 },
+  { id: "normal", label: "СОЛДАТ", color: "#f5c842", accuracy: 0.45, reactionMs: 1200 },
+  { id: "hard", label: "ЭЛИТА", color: "#ff6b35", accuracy: 0.7, reactionMs: 600 },
+  { id: "insane", label: "ПРИЗРАК", color: "#a855f7", accuracy: 0.92, reactionMs: 250 },
+];
+
 interface Props {
-  onPlay: (map: string, mode: string) => void;
+  onPlay: (map: string, mode: string, botCount: number, botDifficulty: string) => void;
   onSettings: () => void;
   onInventory: () => void;
 }
@@ -62,8 +69,11 @@ export default function MainMenu({ onPlay, onSettings, onInventory }: Props) {
   const [selectedMap, setSelectedMap] = useState("urban");
   const [selectedMode, setSelectedMode] = useState("tdm");
   const [hoveredMap, setHoveredMap] = useState<string | null>(null);
+  const [botCount, setBotCount] = useState(5);
+  const [botDifficulty, setBotDifficulty] = useState("normal");
 
   const currentMap = MAPS.find(m => m.id === selectedMap)!;
+  const currentDiff = BOT_DIFFICULTIES.find(d => d.id === botDifficulty)!;
 
   return (
     <div className="min-h-screen bg-game-bg text-game-text font-orbitron overflow-hidden relative">
@@ -274,17 +284,81 @@ export default function MainMenu({ onPlay, onSettings, onInventory }: Props) {
             ))}
           </div>
 
-          <div className="flex-1" />
+          {/* BOT CONFIG */}
+          <div className="px-4 py-3 border-t border-game-border">
+            <div className="text-[10px] text-game-muted tracking-[0.3em] mb-3">БОТЫ</div>
+
+            {/* Bot count slider */}
+            <div className="mb-3">
+              <div className="flex justify-between text-[10px] mb-1">
+                <span className="text-game-muted">КОЛИЧЕСТВО</span>
+                <span className="font-black" style={{ color: currentDiff.color }}>{botCount}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { playBeep(300); setBotCount(c => Math.max(1, c - 1)); }}
+                  className="w-6 h-6 border border-game-border text-game-muted hover:border-game-muted hover:text-game-text transition-all text-xs flex items-center justify-center"
+                >−</button>
+                <div
+                  className="flex-1 h-2 bg-game-border cursor-pointer relative"
+                  onClick={e => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const pct = (e.clientX - rect.left) / rect.width;
+                    setBotCount(Math.max(1, Math.min(30, Math.round(pct * 30))));
+                    playBeep(400);
+                  }}
+                >
+                  <div
+                    className="h-full transition-all"
+                    style={{ width: `${(botCount / 30) * 100}%`, backgroundColor: currentDiff.color }}
+                  />
+                  {/* Tick marks */}
+                  {[5,10,15,20,25,30].map(t => (
+                    <div key={t} className="absolute top-0 bottom-0 w-px bg-game-border/60" style={{ left: `${(t/30)*100}%` }} />
+                  ))}
+                </div>
+                <button
+                  onClick={() => { playBeep(500); setBotCount(c => Math.min(30, c + 1)); }}
+                  className="w-6 h-6 border border-game-border text-game-muted hover:border-game-muted hover:text-game-text transition-all text-xs flex items-center justify-center"
+                >+</button>
+              </div>
+              <div className="flex justify-between text-[8px] text-game-muted/50 mt-0.5 px-7">
+                <span>1</span><span>10</span><span>20</span><span>30</span>
+              </div>
+            </div>
+
+            {/* Difficulty */}
+            <div>
+              <div className="text-[10px] text-game-muted tracking-[0.3em] mb-1.5">СЛОЖНОСТЬ</div>
+              <div className="grid grid-cols-4 gap-1">
+                {BOT_DIFFICULTIES.map(d => (
+                  <button
+                    key={d.id}
+                    onClick={() => { playBeep(600); setBotDifficulty(d.id); }}
+                    className={`py-1.5 text-[8px] font-bold tracking-wider border transition-all ${
+                      botDifficulty === d.id
+                        ? "border-current"
+                        : "border-game-border text-game-muted hover:border-game-muted"
+                    }`}
+                    style={botDifficulty === d.id ? { color: d.color, borderColor: d.color, backgroundColor: d.color + "15" } : {}}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
           {/* PLAY button */}
           <div className="p-4">
             <button
-              onClick={() => { playClick(); onPlay(selectedMap, selectedMode); }}
-              className="w-full py-4 bg-game-accent text-black font-black text-sm tracking-[0.3em] hover:bg-game-accent/90 transition-all duration-200 relative overflow-hidden group"
+              onClick={() => { playClick(); onPlay(selectedMap, selectedMode, botCount, botDifficulty); }}
+              className="w-full py-4 text-black font-black text-sm tracking-[0.3em] transition-all duration-200 relative overflow-hidden group"
+              style={{ backgroundColor: currentDiff.color }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 <Icon name="Play" size={16} />
-                В БОЙ
+                В БОЙ · {botCount} БОТОВ
               </span>
               <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-12" />
             </button>
