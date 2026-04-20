@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { playShoot, playReload, playHit, playKill, startMusic, stopMusic } from "@/lib/audio";
+import Scoreboard from "@/components/game/Scoreboard";
 
 interface Props {
   mapId: string;
@@ -341,18 +342,16 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
         </div>
       </div>
 
-      {/* Alerts */}
+      {/* Scoreboard */}
       {aliveEnemies === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center z-50 bg-black/60">
-          <div className="text-center border-2 p-12" style={{ borderColor: mapColor }}>
-            <div className="text-4xl font-black tracking-[0.3em]" style={{ color: mapColor }}>ПОБЕДА!</div>
-            <div className="text-game-muted text-sm mt-2">Все противники уничтожены</div>
-            <div className="text-white font-bold mt-4">СЧЁТ: {score + 500}</div>
-            <button onClick={onExit} className="mt-6 px-8 py-2 border-2 text-sm font-bold tracking-wider hover:bg-white/10 transition-all" style={{ borderColor: mapColor, color: mapColor }}>
-              В МЕНЮ
-            </button>
-          </div>
-        </div>
+        <Scoreboard
+          mapId={mapId}
+          mode={mode}
+          playerKills={kills}
+          playerScore={score}
+          onMenu={() => { stopMusic(); onExit(); }}
+          onRematch={() => { stopMusic(); onExit(); }}
+        />
       )}
     </div>
   );
