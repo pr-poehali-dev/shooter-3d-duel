@@ -2,91 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap");
+
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Game theme variables */
+    --game-bg: #0a0c0f;
+    --game-bg2: #0e1117;
+    --game-text: #c8d4e0;
+    --game-accent: #00d4ff;
+    --game-accent2: #ff6b35;
+    --game-muted: #4a5568;
+    --game-border: #1e2a38;
+    --game-panel: #0d1520;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -94,8 +65,187 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
+    background-color: var(--game-bg);
+    color: var(--game-text);
   }
+}
+
+/* Game Typography */
+.font-orbitron {
+  font-family: "Orbitron", monospace;
+}
+.font-mono-game {
+  font-family: "Share Tech Mono", monospace;
+}
+
+/* Scanlines effect */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* Grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Map preview backgrounds */
+.map-preview {
+  background:
+    radial-gradient(
+      ellipse at 30% 30%,
+      color-mix(in srgb, var(--map-color) 15%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 70% 70%,
+      color-mix(in srgb, var(--map-color) 8%, transparent) 0%,
+      transparent 50%
+    ),
+    linear-gradient(135deg, #0a0c0f 0%, #0e1520 50%, #0a0c0f 100%);
+}
+
+/* Battlefield view */
+.battlefield-view {
+  background:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--map-col) 5%, transparent) 0%,
+      transparent 70%
+    ),
+    linear-gradient(to bottom, #050810 0%, #0a0f1a 40%, #050810 100%);
+}
+
+/* Game buttons */
+.game-btn {
+  background: var(--game-accent);
+  color: #000;
+  font-family: "Orbitron", monospace;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.game-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--game-accent) 40%, transparent);
+}
+.game-btn-secondary {
+  background: transparent;
+  color: var(--game-muted);
+  font-family: "Orbitron", monospace;
+  letter-spacing: 0.15em;
+  border: 1px solid var(--game-border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.game-btn-secondary:hover {
+  border-color: var(--game-muted);
+  color: var(--game-text);
+}
+.game-btn-danger {
+  background: transparent;
+  color: #ef4444;
+  font-family: "Orbitron", monospace;
+  letter-spacing: 0.15em;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.game-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+/* Crosshair */
+.crosshair {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.ch-line {
+  position: absolute;
+  background: rgba(0, 212, 255, 0.8);
+}
+.ch-top {
+  width: 2px;
+  height: 10px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ch-bottom {
+  width: 2px;
+  height: 10px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ch-left {
+  height: 2px;
+  width: 10px;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ch-right {
+  height: 2px;
+  width: 10px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ch-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(0, 212, 255, 0.9);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Enemy alive animation */
+.enemy-alive {
+  animation: enemy-pulse 2s ease-in-out infinite;
+}
+@keyframes enemy-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 1));
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--game-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--game-border);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--game-muted);
 }

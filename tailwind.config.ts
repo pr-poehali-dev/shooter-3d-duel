@@ -24,6 +24,14 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				'game-bg': 'var(--game-bg)',
+				'game-bg2': 'var(--game-bg2)',
+				'game-text': 'var(--game-text)',
+				'game-accent': 'var(--game-accent)',
+				'game-accent2': 'var(--game-accent2)',
+				'game-muted': 'var(--game-muted)',
+				'game-border': 'var(--game-border)',
+				'game-panel': 'var(--game-panel)',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
