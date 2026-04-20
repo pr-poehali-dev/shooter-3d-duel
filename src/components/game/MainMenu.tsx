@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import { playClick, playBeep } from "@/lib/audio";
 
 const MAPS = [
   {
@@ -117,7 +118,7 @@ export default function MainMenu({ onPlay, onSettings, onInventory }: Props) {
             {MAPS.map((map) => (
               <button
                 key={map.id}
-                onClick={() => setSelectedMap(map.id)}
+                onClick={() => { playBeep(440); setSelectedMap(map.id); }}
                 onMouseEnter={() => setHoveredMap(map.id)}
                 onMouseLeave={() => setHoveredMap(null)}
                 className={`w-full text-left p-3 border transition-all duration-200 relative overflow-hidden ${
@@ -278,7 +279,7 @@ export default function MainMenu({ onPlay, onSettings, onInventory }: Props) {
           {/* PLAY button */}
           <div className="p-4">
             <button
-              onClick={() => onPlay(selectedMap, selectedMode)}
+              onClick={() => { playClick(); onPlay(selectedMap, selectedMode); }}
               className="w-full py-4 bg-game-accent text-black font-black text-sm tracking-[0.3em] hover:bg-game-accent/90 transition-all duration-200 relative overflow-hidden group"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

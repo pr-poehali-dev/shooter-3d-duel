@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+import { playShoot, playReload, playHit, playKill, startMusic, stopMusic } from "@/lib/audio";
 
 interface Props {
   mapId: string;
@@ -51,6 +52,11 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
   const mapColor = MAP_COLORS[mapId] || "#ff6b35";
 
   useEffect(() => {
+    startMusic();
+    return () => stopMusic();
+  }, []);
+
+  useEffect(() => {
     const t = setInterval(() => setTime(p => Math.max(0, p - 1)), 1000);
     return () => clearInterval(t);
   }, []);
@@ -60,11 +66,11 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
   const shoot = () => {
     const w = weapons[activeWeapon];
     if (w.ammo <= 0) return;
+    playShoot();
     setWeapons(prev => prev.map((wp, i) => i === activeWeapon ? { ...wp, ammo: wp.ammo - 1 } : wp));
     setShootEffect(true);
     setTimeout(() => setShootEffect(false), 150);
 
-    // hit random active enemy
     const active = enemies.filter(e => e.active && e.hp > 0);
     if (active.length > 0) {
       const target = active[Math.floor(Math.random() * active.length)];
@@ -73,6 +79,7 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
         if (e.id !== target.id) return e;
         const newHp = Math.max(0, e.hp - dmg);
         if (newHp === 0) {
+          setTimeout(() => playKill(), 50);
           setKills(k => k + 1);
           setScore(s => s + 100);
         }
@@ -82,6 +89,7 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
   };
 
   const takeDamage = () => {
+    playHit();
     setHitEffect(true);
     setTimeout(() => setHitEffect(false), 400);
     if (playerArmor > 0) {
@@ -94,6 +102,7 @@ export default function BattleScene({ mapId, mode, onExit, onInventory }: Props)
   const reload = () => {
     const w = weapons[activeWeapon];
     const need = w.maxAmmo - w.ammo;
+    playReload();
     setWeapons(prev => prev.map((wp, i) => i === activeWeapon ? { ...wp, ammo: Math.min(wp.maxAmmo, wp.ammo + need) } : wp));
   };
 

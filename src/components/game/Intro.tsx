@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { playBeep, playClick, playMenuMusic, stopMusic } from "@/lib/audio";
 
 interface Props {
   onDone: () => void;
@@ -28,6 +29,7 @@ export default function Intro({ onDone }: Props) {
     const interval = setInterval(() => {
       i++;
       setVisibleLines(i);
+      playBeep(300 + i * 80);
       if (i >= BOOT_LINES.length) {
         clearInterval(interval);
         setTimeout(() => setPhase("logo"), 400);
@@ -41,13 +43,20 @@ export default function Intro({ onDone }: Props) {
     setTimeout(() => setLogoVisible(true), 100);
     setTimeout(() => {
       setGlitch(true);
+      playBeep(120);
       setTimeout(() => setGlitch(false), 300);
     }, 600);
     setTimeout(() => setTaglineVisible(true), 900);
-    setTimeout(() => setPressVisible(true), 1600);
+    setTimeout(() => {
+      setPressVisible(true);
+      playMenuMusic();
+    }, 1600);
+    return () => stopMusic();
   }, [phase]);
 
   const handleStart = () => {
+    playClick();
+    stopMusic();
     setFading(true);
     setTimeout(onDone, 700);
   };
